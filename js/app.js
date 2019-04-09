@@ -40,7 +40,6 @@ var budgetController = (function () {
         sum = 600 + 100 = 700    
         */
 
-
     }
 
     // définition des tableau a agrémenté des Value 
@@ -133,8 +132,6 @@ var budgetController = (function () {
             };
         },
 
-
-
         testing: function() {
             console.log(data);
         }
@@ -161,7 +158,12 @@ var UIController = (function () {
         inputValue: '.add__value',
         inputBtn: '.add__btn',
         incomeContainer: '.income__list',
-        expensesContainer: '.expenses__list'
+        expensesContainer: '.expenses__list',
+        budgetLabel: '.budget__value',
+        incomeLabel: '.budget__income--value',
+        expensesLabel: '.budget__expenses--value',
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container',
     };
     // Some Code
     return {
@@ -183,12 +185,12 @@ var UIController = (function () {
             // recuperation de l'html pour y mettre les atribue value
             if (type === 'inc') {
                 element = DOMstrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             }
             // recuperation de l'html pour y mettre les atribue value
             else if (type === 'exp') {
                 element = DOMstrings.expensesContainer;
-                html = '<div class="item clearfix" id="expense-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="exp-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             }
 
             //  replace placeholder text with some actual data
@@ -211,6 +213,20 @@ var UIController = (function () {
                 current.value = "";
             });
             fieldsArr[0].focus();
+        },
+        
+        //DOM Label titre definition des atribues (haut de page) 
+        displayBudget: function(obj) {
+            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+            document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+
+            if (obj.percentage > 0) {
+                document.querySelector(DOMstrings.percentageLabel).textContent = percentage + '%';
+            }
+            else {
+                document.querySelector(DOMstrings.percentageLabel).textContent = percentage = '---';
+            }
         },
 
         // ajouter les valeurs (console)
@@ -238,10 +254,11 @@ var controller = (function (budgetCtrl, UICtrl) {
                 // console.log('Enter was pressed ( la touche entré a été appuyé'); 
             }
 
-
             // TEST A EFFACE ***
             // console.log(event);
         });
+
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
     };
 
@@ -256,11 +273,12 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // 3. Display the budget
         // affichage du budget 
-        console.log(budget);
+        UICtrl.displayBudget(budget);
+        // console.log(budget);
 
     };
 
-    var ctrlAddItem = function () {
+    var ctrlAddItem = function() {
         var input, newItem;
 
         // 1. get the field input data
@@ -285,10 +303,32 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // 6. display the budget on the UI
 
-
         // TEST A EFFACE ***
         // console.log('It Work. (au boulot)');
         }
+    };
+
+    var ctrlDeleteItem = function(event) {
+        var itemID, splitID, type, ID;
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode,id;
+        
+        if(itemID) {
+            // inc-1
+            splitID = itemID.split('-');
+            type = splitID[0];
+            ID = splitID[1];
+
+            // 1. delete the item from the data structure
+
+
+            // 2. delete the item from UI
+
+
+            // 3. Update and the show the new budget
+
+            
+        }
+
     };
 
     // TEST A EFFACE ***
@@ -302,6 +342,12 @@ var controller = (function (budgetCtrl, UICtrl) {
     return {
         init: function () {
             console.log("Aplication has started. (Démarrage de l'application");
+            UICtrl.displayBudget({
+                budget: 0,
+                totalInc: 0,
+                totalExp: 0,
+                percentage: -1
+            });
             setupEventListeners();
         }
     };
@@ -309,3 +355,12 @@ var controller = (function (budgetCtrl, UICtrl) {
 })(budgetController, UIController);
 
 controller.init();
+
+/*
+À retenir :
+
+-- 1. Toujour bien choisir les atribue de valeur (var, const, let, function, ...)( /!\ au Majuscule & Ponctuation ).
+-- 2. Avoir un plan du site (back, front) en tête bien structuré !!
+-- 3. Avoir les bonnes appli lié a l'editeur de texte (Visual studio).
+-- 4. 
+*/
